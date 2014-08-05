@@ -164,40 +164,40 @@ function apply_filters( $tag, $value ) {
 	$args = array();
 
 	// Do 'all' actions first.
-	if ( isset($wp_filter['all']) ) {
+	if ( isset( $wp_filter['all'] ) ) {
 		$wp_current_filter[] = $tag;
 		$args = func_get_args();
-		_wp_call_all_hook($args);
+		_wp_call_all_hook( $args );
 	}
 
-	if ( !isset($wp_filter[$tag]) ) {
-		if ( isset($wp_filter['all']) )
-			array_pop($wp_current_filter);
+	if ( ! isset( $wp_filter[$tag] ) ) {
+		if ( isset( $wp_filter['all'] ) )
+			array_pop( $wp_current_filter );
 		return $value;
 	}
 
-	if ( !isset($wp_filter['all']) )
+	if ( ! isset( $wp_filter['all'] ) )
 		$wp_current_filter[] = $tag;
 
 	// Sort.
-	if ( !isset( $merged_filters[ $tag ] ) ) {
-		ksort($wp_filter[$tag]);
+	if ( ! isset( $merged_filters[ $tag ] ) ) {
+		ksort( $wp_filter[$tag] );
 		$merged_filters[ $tag ] = true;
 	}
 
 	reset( $wp_filter[ $tag ] );
 
-	if ( empty($args) )
+	if ( empty( $args ) )
 		$args = func_get_args();
 
 	do {
-		foreach( (array) current($wp_filter[$tag]) as $the_ )
-			if ( !is_null($the_['function']) ){
+		foreach( (array) current( $wp_filter[$tag] ) as $the_ )
+			if ( ! is_null( $the_['function'] ) ){
 				$args[1] = $value;
-				$value = call_user_func_array($the_['function'], array_slice($args, 1, (int) $the_['accepted_args']));
+				$value = call_user_func_array( $the_['function'], array_slice( $args, 1, (int) $the_['accepted_args'] ) );
 			}
 
-	} while ( next($wp_filter[$tag]) !== false );
+	} while ( next( $wp_filter[$tag] ) !== false );
 
 	array_pop( $wp_current_filter );
 
