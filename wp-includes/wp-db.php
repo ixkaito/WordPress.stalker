@@ -655,7 +655,7 @@ class wpdb {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param string $name  The private member to check
+	 * @param string $name The private member to check
 	 *
 	 * @return bool If the member is set or not
 	 */
@@ -668,7 +668,7 @@ class wpdb {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param string $name  The private member to unset
+	 * @param string $name The private member to unset
 	 */
 	public function __unset( $name ) {
 		unset( $this->$name );
@@ -680,7 +680,7 @@ class wpdb {
 	 * @since 3.1.0
 	 */
 	public function init_charset() {
-		if ( function_exists('is_multisite') && is_multisite() ) {
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$this->charset = 'utf8';
 			if ( defined( 'DB_COLLATE' ) && DB_COLLATE )
 				$this->collate = DB_COLLATE;
