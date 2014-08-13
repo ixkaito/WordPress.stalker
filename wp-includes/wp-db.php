@@ -976,7 +976,7 @@ class wpdb {
 	 * @return null Always null.
 	 */
 	public function select( $db, $dbh = null ) {
-		if ( is_null($dbh) )
+		if ( is_null( $dbh ) )
 			$dbh = $this->dbh;
 
 		if ( $this->use_mysqli ) {
