@@ -1059,7 +1059,7 @@ class wpdb {
 	function _escape( $data ) {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $k => $v ) {
-				if ( is_array($v) )
+				if ( is_array( $v ) )
 					$data[$k] = $this->_escape( $v );
 				else
 					$data[$k] = $this->_real_escape( $v );
