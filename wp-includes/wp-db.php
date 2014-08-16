@@ -1211,7 +1211,7 @@ class wpdb {
 	public function print_error( $str = '' ) {
 		global $EZSQL_ERROR;
 
-		if ( !$str ) {
+		if ( ! $str ) {
 			if ( $this->use_mysqli ) {
 				$str = mysqli_error( $this->dbh );
 			} else {
