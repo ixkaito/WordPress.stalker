@@ -203,7 +203,7 @@ class wpdb {
 	var $ready = false;
 
 	/**
-	 * {@internal Missing Description}}
+	 * {@internal Missing Description}
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -212,7 +212,7 @@ class wpdb {
 	public $blogid = 0;
 
 	/**
-	 * {@internal Missing Description}}
+	 * {@internal Missing Description}
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -655,7 +655,7 @@ class wpdb {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param string $name  The private member to check
+	 * @param string $name The private member to check
 	 *
 	 * @return bool If the member is set or not
 	 */
@@ -668,7 +668,7 @@ class wpdb {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param string $name  The private member to unset
+	 * @param string $name The private member to unset
 	 */
 	public function __unset( $name ) {
 		unset( $this->$name );
@@ -680,7 +680,7 @@ class wpdb {
 	 * @since 3.1.0
 	 */
 	public function init_charset() {
-		if ( function_exists('is_multisite') && is_multisite() ) {
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$this->charset = 'utf8';
 			if ( defined( 'DB_COLLATE' ) && DB_COLLATE )
 				$this->collate = DB_COLLATE;
@@ -976,7 +976,7 @@ class wpdb {
 	 * @return null Always null.
 	 */
 	public function select( $db, $dbh = null ) {
-		if ( is_null($dbh) )
+		if ( is_null( $dbh ) )
 			$dbh = $this->dbh;
 
 		if ( $this->use_mysqli ) {
@@ -1059,7 +1059,7 @@ class wpdb {
 	function _escape( $data ) {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $k => $v ) {
-				if ( is_array($v) )
+				if ( is_array( $v ) )
 					$data[$k] = $this->_escape( $v );
 				else
 					$data[$k] = $this->_real_escape( $v );
@@ -1167,7 +1167,7 @@ class wpdb {
 			$args = $args[0];
 		$query = str_replace( "'%s'", '%s', $query ); // in case someone mistakenly already singlequoted it
 		$query = str_replace( '"%s"', '%s', $query ); // doublequote unquoting
-		$query = preg_replace( '|(?<!%)%f|' , '%F', $query ); // Force floats to be locale unaware
+		$query = preg_replace( '|(?<!%)%f|', '%F', $query ); // Force floats to be locale unaware
 		$query = preg_replace( '|(?<!%)%s|', "'%s'", $query ); // quote the strings, avoiding escaped strings like %%s
 		array_walk( $args, array( $this, 'escape_by_ref' ) );
 		return @vsprintf( $query, $args );
