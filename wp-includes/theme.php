@@ -137,7 +137,7 @@ function is_child_theme() {
  * The theme name that the administrator has currently set the front end theme
  * as.
  *
- * For all extensive purposes, the template name and the stylesheet name are
+ * For all intents and purposes, the template name and the stylesheet name are
  * going to be the same for most cases.
  *
  * @since 1.5.0
@@ -370,11 +370,19 @@ function register_theme_directory( $directory ) {
 		// Try prepending as the theme directory could be relative to the content directory
 		$directory = WP_CONTENT_DIR . '/' . $directory;
 		// If this directory does not exist, return and do not register
-		if ( ! file_exists( $directory ) )
+		if ( ! file_exists( $directory ) ) {
 			return false;
+		}
 	}
 
-	$wp_theme_directories[] = $directory;
+	if ( ! is_array( $wp_theme_directories ) ) {
+		$wp_theme_directories = array();
+	}
+
+	$untrailed = untrailingslashit( $directory );
+	if ( ! empty( $untrailed ) && ! in_array( $untrailed, $wp_theme_directories ) ) {
+		$wp_theme_directories[] = $untrailed;
+	}
 
 	return true;
 }

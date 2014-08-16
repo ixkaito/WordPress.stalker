@@ -1637,8 +1637,9 @@ function wp_ajax_find_posts() {
 
 	$posts = get_posts( $args );
 
-	if ( ! $posts )
-		wp_die( __('No items found.') );
+	if ( ! $posts ) {
+		wp_send_json_error( __( 'No items found.' ) );
+	}
 
 	$html = '<table class="widefat"><thead><tr><th class="found-radio"><br /></th><th>'.__('Title').'</th><th class="no-break">'.__('Type').'</th><th class="no-break">'.__('Date').'</th><th class="no-break">'.__('Status').'</th></tr></thead><tbody>';
 	$alt = '';
@@ -1952,7 +1953,7 @@ function wp_ajax_set_post_thumbnail() {
 }
 
 /**
- * Ajax handler for setting the featured image for an attachment.
+ * AJAX handler for setting the featured image for an attachment.
  *
  * @since 4.0.0
  *
@@ -2156,11 +2157,18 @@ function wp_ajax_query_attachments() {
 	$query = isset( $_REQUEST['query'] ) ? (array) $_REQUEST['query'] : array();
 	$query = array_intersect_key( $query, array_flip( array(
 		's', 'order', 'orderby', 'posts_per_page', 'paged', 'post_mime_type',
-		'post_parent', 'post__in', 'post__not_in',
+		'post_parent', 'post__in', 'post__not_in', 'year', 'monthnum'
 	) ) );
 
 	$query['post_type'] = 'attachment';
-	$query['post_status'] = 'inherit';
+	if ( MEDIA_TRASH
+		&& ! empty( $_REQUEST['query']['post_status'] )
+		&& 'trash' === $_REQUEST['query']['post_status'] ) {
+		$query['post_status'] = 'trash';
+	} else {
+		$query['post_status'] = 'inherit';
+	}
+
 	if ( current_user_can( get_post_type_object( 'attachment' )->cap->read_private_posts ) )
 		$query['post_status'] .= ',private';
 
@@ -2215,6 +2223,9 @@ function wp_ajax_save_attachment() {
 	if ( isset( $changes['description'] ) )
 		$post['post_content'] = $changes['description'];
 
+	if ( MEDIA_TRASH && isset( $changes['status'] ) )
+		$post['post_status'] = $changes['status'];
+
 	if ( isset( $changes['alt'] ) ) {
 		$alt = wp_unslash( $changes['alt'] );
 		if ( $alt != get_post_meta( $id, '_wp_attachment_image_alt', true ) ) {
@@ -2242,7 +2253,12 @@ function wp_ajax_save_attachment() {
 		}
 	}
 
-	wp_update_post( $post );
+	if ( MEDIA_TRASH && isset( $changes['status'] ) && 'trash' === $changes['status'] ) {
+		wp_delete_post( $id );
+	} else {
+		wp_update_post( $post );
+	}
+
 	wp_send_json_success();
 }
 
@@ -2612,7 +2628,7 @@ function wp_ajax_query_themes() {
 }
 
 /**
- * Apply [embed] handlers to a string.
+ * Apply [embed] AJAX handlers to a string.
  *
  * @since 4.0.0
  *
@@ -2655,7 +2671,7 @@ function wp_ajax_parse_embed() {
 	if ( ! $parsed ) {
 		wp_send_json_error( array(
 			'type' => 'not-embeddable',
-			'message' => sprintf( __( '%s failed to embed.' ), '<code>' . esc_url( $url ) . '</code>' ),
+			'message' => sprintf( __( '%s failed to embed.' ), '<code>' . esc_html( $url ) . '</code>' ),
 		) );
 	}
 
@@ -2685,7 +2701,7 @@ function wp_ajax_parse_embed() {
 		// Admin is ssl and the embed is not. Iframes, scripts, and other "active content" will be blocked.
 		wp_send_json_error( array(
 			'type' => 'not-ssl',
-			'message' => sprintf( __( 'Preview not available. %s cannot be embedded securely.' ), '<code>' . esc_url( $url ) . '</code>' ),
+			'message' => sprintf( __( 'Preview not available. %s cannot be embedded securely.' ), '<code>' . esc_html( $url ) . '</code>' ),
 		) );
 	}
 
@@ -2713,7 +2729,7 @@ function wp_ajax_parse_media_shortcode() {
 	if ( ! empty( $wp_scripts ) ) {
 		$wp_scripts->done = array();
 	}
-	
+
 	if ( 'playlist' === $_REQUEST['type'] ) {
 		wp_underscore_playlist_templates();
 

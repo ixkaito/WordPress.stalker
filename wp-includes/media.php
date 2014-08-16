@@ -1758,7 +1758,7 @@ function wp_video_shortcode( $attr, $content = '' ) {
 		}
 	}
 
-	$yt_pattern = '#^https?://(:?www\.)?(:?youtube\.com/watch|youtu\.be/)#';
+	$yt_pattern = '#^https?://(?:www\.)?(?:youtube\.com/watch|youtu\.be/)#';
 
 	$primary = false;
 	if ( ! empty( $atts['src'] ) ) {
@@ -1874,7 +1874,14 @@ function wp_video_shortcode( $attr, $content = '' ) {
 	}
 	$html .= '</video>';
 
-	$output = sprintf( '<div style="width: %dpx; max-width: 100%%;" class="wp-video">%s</div>', $atts['width'], $html );
+	$width_rule = $height_rule = '';
+	if ( ! empty( $atts['width'] ) ) {
+		$width_rule = sprintf( 'width: %dpx; ', $atts['width'] );
+	}
+	if ( ! empty( $atts['height'] ) ) {
+		$height_rule = sprintf( 'height: %dpx; ', $atts['height'] );
+	}
+	$output = sprintf( '<div style="%s%s" class="wp-video">%s</div>', $width_rule, $height_rule, $html );
 
 	/**
 	 * Filter the output of the video shortcode.
@@ -2288,7 +2295,7 @@ function wp_embed_handler_googlevideo( $matches, $attr, $url, $rawattr ) {
  * @since 4.0.0
  *
  * @param array  $matches The regex matches from the provided regex when calling
- *                        {@link wp_embed_register_handler()}.
+ *                        {@see wp_embed_register_handler()}.
  * @param array  $attr    Embed attributes.
  * @param string $url     The original URL that was matched by the regex.
  * @param array  $rawattr The original unmodified attributes.
@@ -2628,6 +2635,7 @@ function wp_prepare_attachment_for_js( $attachment ) {
 			'edit'   => false
 		),
 		'editLink'   => false,
+		'meta'       => false,
 	);
 
 	$author = new WP_User( $attachment->post_author );
@@ -2635,8 +2643,11 @@ function wp_prepare_attachment_for_js( $attachment ) {
 
 	if ( $attachment->post_parent ) {
 		$post_parent = get_post( $attachment->post_parent );
-		$response['uploadedToLink'] = get_edit_post_link( $attachment->post_parent, 'raw' );
-		$response['uploadedToTitle'] = $post_parent->post_title ? $post_parent->post_title : __( '(No title)' );
+		$parent_type = get_post_type_object( $post_parent->post_type );
+		if ( $parent_type && $parent_type->show_ui && current_user_can( 'edit_post', $attachment->post_parent ) ) {
+			$response['uploadedToLink'] = get_edit_post_link( $attachment->post_parent, 'raw' );
+		}
+		$response['uploadedToTitle'] = $post_parent->post_title ? $post_parent->post_title : __( '(no title)' );
 	}
 
 	$attached_file = get_attached_file( $attachment->ID );
@@ -2725,6 +2736,8 @@ function wp_prepare_attachment_for_js( $attachment ) {
 
 		$response['meta'] = array();
 		foreach ( wp_get_attachment_id3_keys( $attachment, 'js' ) as $key => $label ) {
+			$response['meta'][ $key ] = false;
+
 			if ( ! empty( $meta[ $key ] ) ) {
 				$response['meta'][ $key ] = $meta[ $key ];
 			}
@@ -2772,7 +2785,7 @@ function wp_enqueue_media( $args = array() ) {
 	if ( did_action( 'wp_enqueue_media' ) )
 		return;
 
-	global $content_width, $wpdb;
+	global $content_width, $wpdb, $wp_locale;
 
 	$defaults = array(
 		'post' => null,
@@ -2825,6 +2838,15 @@ function wp_enqueue_media( $args = array() ) {
 		AND post_mime_type LIKE 'video%'
 		LIMIT 1
 	" );
+	$months = $wpdb->get_results( $wpdb->prepare( "
+		SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
+		FROM $wpdb->posts
+		WHERE post_type = %s
+		ORDER BY post_date DESC
+	", 'attachment' ) );
+	foreach ( $months as $month_year ) {
+		$month_year->text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month_year->month ), $month_year->year );
+	}
 
 	$settings = array(
 		'tabs'      => $tabs,
@@ -2846,6 +2868,8 @@ function wp_enqueue_media( $args = array() ) {
 		'embedExts'    => $exts,
 		'embedMimes'   => $ext_mimes,
 		'contentWidth' => $content_width,
+		'months'       => $months,
+		'mediaTrash'   => MEDIA_TRASH ? 1 : 0
 	);
 
 	$post = null;
@@ -2904,14 +2928,25 @@ function wp_enqueue_media( $args = array() ) {
 		'returnToLibrary'        => __( '&#8592; Return to library' ),
 		'allMediaItems'          => __( 'All media items' ),
 		'allMediaTypes'          => __( 'All media types' ),
+		'allDates'               => __( 'All dates' ),
 		'noItemsFound'           => __( 'No items found.' ),
 		'insertIntoPost'         => $hier ? __( 'Insert into page' ) : __( 'Insert into post' ),
+		'unattached'             => __( 'Unattached' ),
+		'trash'                  => __( 'Trash' ),
 		'uploadedToThisPost'     => $hier ? __( 'Uploaded to this page' ) : __( 'Uploaded to this post' ),
 		'warnDelete'             => __( "You are about to permanently delete this item.\n  'Cancel' to stop, 'OK' to delete." ),
 		'warnBulkDelete'         => __( "You are about to permanently delete these items.\n  'Cancel' to stop, 'OK' to delete." ),
-		'bulkActions'            => __( 'Bulk Actions' ),
+		'warnBulkTrash'          => __( "You are about to trash these items.\n  'Cancel' to stop, 'OK' to delete." ),
+		'bulkSelect'             => __( 'Bulk Select' ),
+		'cancelSelection'        => __( 'Cancel Selection' ),
+		'trashSelected'          => __( 'Trash Selected' ),
+		'untrashSelected'        => __( 'Untrash Selected' ),
+		'deleteSelected'         => __( 'Delete Selected' ),
 		'deletePermanently'      => __( 'Delete Permanently' ),
 		'apply'                  => __( 'Apply' ),
+		'filterByDate'           => __( 'Filter by date' ),
+		'filterByType'           => __( 'Filter by type' ),
+		'searchMediaLabel'       => __( 'Search Media' ),
 
 		// Library Details
 		'attachmentDetails'  => __( 'Attachment Details' ),
@@ -3270,6 +3305,7 @@ function attachment_url_to_postid( $url ) {
  * @since 4.0.0
  *
  * @global $wp_version
+ *
  * @return array The relevant CSS file URLs.
  */
 function wp_media_mce_styles() {

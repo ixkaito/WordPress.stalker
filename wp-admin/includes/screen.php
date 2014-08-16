@@ -1019,12 +1019,7 @@ final class WP_Screen {
 		?>
 		<div id="screen-options-wrap" class="hidden" tabindex="-1" aria-label="<?php esc_attr_e('Screen Options Tab'); ?>">
 		<form id="adv-settings" action="" method="post">
-		<?php if (
-			isset( $wp_meta_boxes[ $this->id ] )
-			|| $this->get_option( 'per_page' )
-			|| $this->get_option( 'misc_screen_options' )
-			|| ( $columns && empty( $columns['_title'] ) )
-		) : ?>
+		<?php if ( isset( $wp_meta_boxes[ $this->id ] ) || $this->get_option( 'per_page' ) || ( $columns && empty( $columns['_title'] ) ) ) : ?>
 			<h5><?php _e( 'Show on screen' ); ?></h5>
 		<?php
 		endif;
@@ -1076,28 +1071,6 @@ final class WP_Screen {
 				?>
 				<br class="clear" />
 			</div>
-		<?php elseif ( $this->get_option( 'misc_screen_options' ) ):
-			$misc_options = $this->get_option( 'misc_screen_options' );
-		?>
-			<div class="metabox-prefs misc-screen-options" data-id="<?php echo esc_attr( $misc_options['id'] ) ?>">
-			<?php
-
-			$option = get_user_option( $misc_options['option'] );
-			$hidden = array();
-			if ( ! empty( $option ) ) {
-				$hidden = $option;
-			}
-			foreach ( $this->_options as $column => $args ) {
-				if ( 'misc_screen_options' === $column ) {
-					continue;
-				}
-				$id = "$column-hide";
-				echo '<label for="' . $id . '">';
-				echo '<input class="hide-column-tog" name="' . $id . '" type="checkbox" id="' . $id . '" value="' . $column . '"' . checked( ! in_array( $column, $hidden ), true, false ) . ' />';
-				echo $args['label'] . "</label>\n";
-			} ?>
-				<br class="clear" />
-			</div>
 		<?php endif;
 
 		$this->render_screen_layout();
@@ -1136,6 +1109,11 @@ final class WP_Screen {
 				</label>
 				<?php
 			endfor; ?>
+		</div>
+		<div class="editor-expand hidden">
+			<label for="editor-expand-toggle">
+			<input type="checkbox" id="editor-expand-toggle" <?php checked( get_user_setting( 'editor_expand', 'on' ) === 'on' ); ?> />
+			<?php _e( 'Expand the editor to match the window height.' ); ?></label>
 		</div>
 		<?php
 	}

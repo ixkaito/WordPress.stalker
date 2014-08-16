@@ -385,8 +385,8 @@ class WP_Widget_Meta extends WP_Widget {
 			<ul>
 			<?php wp_register(); ?>
 			<li><?php wp_loginout(); ?></li>
-			<li><a href="<?php bloginfo('rss2_url'); ?>" title="<?php echo esc_attr(__('Syndicate this site using RSS 2.0')); ?>"><?php _e('Entries <abbr title="Really Simple Syndication">RSS</abbr>'); ?></a></li>
-			<li><a href="<?php bloginfo('comments_rss2_url'); ?>" title="<?php echo esc_attr(__('The latest comments to all posts in RSS')); ?>"><?php _e('Comments <abbr title="Really Simple Syndication">RSS</abbr>'); ?></a></li>
+			<li><a href="<?php bloginfo('rss2_url'); ?>"><?php _e('Entries <abbr title="Really Simple Syndication">RSS</abbr>'); ?></a></li>
+			<li><a href="<?php bloginfo('comments_rss2_url'); ?>"><?php _e('Comments <abbr title="Really Simple Syndication">RSS</abbr>'); ?></a></li>
 <?php
 			/**
 			 * Filter the "Powered by WordPress" text in the Meta widget.
@@ -871,7 +871,13 @@ class WP_Widget_Recent_Comments extends WP_Widget {
 			_prime_post_caches( $post_ids, strpos( get_option( 'permalink_structure' ), '%category%' ), false );
 
 			foreach ( (array) $comments as $comment) {
-				$output .=  '<li class="recentcomments">' . /* translators: comments widget: 1: comment author, 2: post link */ sprintf(_x('%1$s on %2$s', 'widgets'), get_comment_author_link(), '<a href="' . esc_url( get_comment_link($comment->comment_ID) ) . '">' . get_the_title($comment->comment_post_ID) . '</a>') . '</li>';
+				$output .= '<li class="recentcomments">';
+				/* translators: comments widget: 1: comment author, 2: post link */
+				$output .= sprintf( _x( '%1$s on %2$s', 'widgets' ),
+					'<span class="comment-author-link">' . get_comment_author_link() . '</span>',
+					'<a href="' . esc_url( get_comment_link( $comment->comment_ID ) ) . '">' . get_the_title( $comment->comment_post_ID ) . '</a>'
+				);
+				$output .= '</li>';
 			}
 		}
 		$output .= '</ul>';
@@ -963,7 +969,7 @@ class WP_Widget_RSS extends WP_Widget {
 		$url = esc_url(strip_tags($url));
 		$icon = includes_url('images/rss.png');
 		if ( $title )
-			$title = "<a class='rsswidget' href='$url' title='" . esc_attr__( 'Syndicate this content' ) ."'><img style='border:0' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='rsswidget' href='$link' title='$desc'>$title</a>";
+			$title = "<a class='rsswidget' href='$url'><img style='border:0' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='rsswidget' href='$link'>$title</a>";
 
 		echo $args['before_widget'];
 		if ( $title ) {
@@ -1084,7 +1090,7 @@ function wp_widget_rss_output( $rss, $args = array() ) {
 		} elseif ( $show_summary ) {
 			echo "<li><a class='rsswidget' href='$link'>$title</a>{$date}{$summary}{$author}</li>";
 		} else {
-			echo "<li><a class='rsswidget' href='$link' title='$desc'>$title</a>{$date}{$author}</li>";
+			echo "<li><a class='rsswidget' href='$link'>$title</a>{$date}{$author}</li>";
 		}
 	}
 	echo '</ul>';

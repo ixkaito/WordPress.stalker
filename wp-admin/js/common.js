@@ -27,31 +27,12 @@ columns = {
 	},
 
 	saveManageColumnsState : function() {
-		var hidden, page, opts = $( '.misc-screen-options' );
-		if ( opts.length ) {
-			hidden = [];
-			opts.find( '.hide-column-tog' ).each( function() {
-				var $el, field = this.value;
-				$el = $( '.data-' + field );
-				if ( ! this.checked ) {
-					hidden.push( field );
-					$el.removeClass( 'data-visible' ).addClass( 'data-hidden' );
-				} else {
-					$el.removeClass( 'data-hidden' ).addClass( 'data-visible' );
-				}
-			} );
-			page = pagenow + opts.data( 'id' );
-			hidden = hidden.join( ',' );
-		} else {
-			page = pagenow;
-			hidden = this.hidden();
-		}
-
+		var hidden = this.hidden();
 		$.post(ajaxurl, {
 			action: 'hidden-columns',
 			hidden: hidden,
 			screenoptionnonce: $('#screenoptionnonce').val(),
-			page: page
+			page: pagenow
 		});
 	},
 
@@ -610,8 +591,7 @@ $(document).ready( function() {
 
 	window.wpResponsive = {
 		init: function() {
-			var self = this,
-				scrollStart = 0;
+			var self = this;
 
 			// Modify functionality based on custom activate/deactivate event
 			$document.on( 'wp-responsive-activate.wp-responsive', function() {
@@ -635,12 +615,8 @@ $(document).ready( function() {
 			} );
 
 			// Add menu events
-			$adminmenu.on( 'touchstart.wp-responsive', 'li.wp-has-submenu > a', function() {
-				scrollStart = $window.scrollTop();
-			}).on( 'touchend.wp-responsive click.wp-responsive', 'li.wp-has-submenu > a', function( event ) {
-				if ( ! $adminmenu.data('wp-responsive') ||
-					( event.type === 'touchend' && $window.scrollTop() !== scrollStart ) ) {
-
+			$adminmenu.on( 'click.wp-responsive', 'li.wp-has-submenu > a', function( event ) {
+				if ( ! $adminmenu.data('wp-responsive') ) {
 					return;
 				}
 

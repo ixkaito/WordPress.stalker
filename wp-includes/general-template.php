@@ -1503,7 +1503,7 @@ function get_calendar($initial = true, $echo = true) {
 	<tr>';
 
 	if ( $previous ) {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . get_month_link($previous->year, $previous->month) . '" title="' . esc_attr( sprintf(__('View posts for %1$s %2$s'), $wp_locale->get_month($previous->month), date('Y', mktime(0, 0 , 0, $previous->month, 1, $previous->year)))) . '">&laquo; ' . $wp_locale->get_month_abbrev($wp_locale->get_month($previous->month)) . '</a></td>';
+		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . get_month_link($previous->year, $previous->month) . '">&laquo; ' . $wp_locale->get_month_abbrev($wp_locale->get_month($previous->month)) . '</a></td>';
 	} else {
 		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev" class="pad">&nbsp;</td>';
 	}
@@ -1511,7 +1511,7 @@ function get_calendar($initial = true, $echo = true) {
 	$calendar_output .= "\n\t\t".'<td class="pad">&nbsp;</td>';
 
 	if ( $next ) {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . get_month_link($next->year, $next->month) . '" title="' . esc_attr( sprintf(__('View posts for %1$s %2$s'), $wp_locale->get_month($next->month), date('Y', mktime(0, 0 , 0, $next->month, 1, $next->year))) ) . '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($next->month)) . ' &raquo;</a></td>';
+		$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . get_month_link($next->year, $next->month) . '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($next->month)) . ' &raquo;</a></td>';
 	} else {
 		$calendar_output .= "\n\t\t".'<td colspan="3" id="next" class="pad">&nbsp;</td>';
 	}
@@ -1725,10 +1725,14 @@ function the_date( $d = '', $before = '', $after = '', $echo = true ) {
  *
  * @param  string      $d    Optional. PHP date format defaults to the date_format option if not specified.
  * @param  int|WP_Post $post Optional. Post ID or WP_Post object. Default current post.
- * @return string Date the current post was written.
+ * @return string|bool Date the current post was written. False on failure.
  */
 function get_the_date( $d = '', $post = null ) {
 	$post = get_post( $post );
+
+	if ( ! $post ) {
+		return false;
+	}
 
 	if ( '' == $d ) {
 		$the_date = mysql2date( get_option( 'date_format' ), $post->post_date );
@@ -1839,10 +1843,14 @@ function the_time( $d = '' ) {
  *                          was written. Either 'G', 'U', or php date format defaults
  *                          to the value specified in the time_format option. Default empty.
  * @param int|WP_Post $post WP_Post object or ID. Default is global $post object.
- * @return string|int Formatted date string, or Unix timestamp.
+ * @return string|int|bool Formatted date string or Unix timestamp. False on failure.
  */
 function get_the_time( $d = '', $post = null ) {
 	$post = get_post($post);
+
+	if ( ! $post ) {
+		return false;
+	}
 
 	if ( '' == $d )
 		$the_time = get_post_time(get_option('time_format'), false, $post, true);
@@ -1873,10 +1881,14 @@ function get_the_time( $d = '', $post = null ) {
  * @param bool        $gmt       Optional. Whether to retrieve the GMT time. Default false.
  * @param int|WP_Post $post      WP_Post object or ID. Default is global $post object.
  * @param bool        $translate Whether to translate the time string. Default false.
- * @return string|int Formatted date string, or Unix timestamp.
+ * @return string|int|bool Formatted date string or Unix timestamp. False on failure.
  */
 function get_post_time( $d = 'U', $gmt = false, $post = null, $translate = false ) {
 	$post = get_post($post);
+
+	if ( ! $post ) {
+		return false;
+	}
 
 	if ( $gmt )
 		$time = $post->post_date_gmt;
@@ -1951,14 +1963,19 @@ function get_the_modified_time($d = '') {
  *
  * @since 2.0.0
  *
- * @param string $d Optional, default is 'U'. Either 'G', 'U', or php date format.
- * @param bool $gmt Optional, default is false. Whether to return the gmt time.
- * @param int|object $post Optional, default is global post object. A post_id or post object
- * @param bool $translate Optional, default is false. Whether to translate the result
- * @return string Returns timestamp
+ * @param string      $d         Optional. Format to use for retrieving the time the post
+ *                               was modified. Either 'G', 'U', or php date format. Default 'U'.
+ * @param bool        $gmt       Optional. Whether to retrieve the GMT time. Default false.
+ * @param int|WP_Post $post      WP_Post object or ID. Default is global $post object.
+ * @param bool        $translate Whether to translate the time string. Default false.
+ * @return string|int|bool Formatted date string or Unix timestamp. False on failure.
  */
 function get_post_modified_time( $d = 'U', $gmt = false, $post = null, $translate = false ) {
 	$post = get_post($post);
+
+	if ( ! $post ) {
+		return false;
+	}
 
 	if ( $gmt )
 		$time = $post->post_modified_gmt;

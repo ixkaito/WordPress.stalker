@@ -355,7 +355,7 @@
 	wp.media.collection = function(attributes) {
 		var collections = {};
 
-		return _.extend( attributes, {
+		return _.extend( {
 			coerce : wp.media.coerce,
 			/**
 			 * Retrieve attachments based on the properties of the passed shortcode
@@ -440,7 +440,7 @@
 			shortcode: function( attachments ) {
 				var props = attachments.props.toJSON(),
 					attrs = _.pick( props, 'orderby', 'order' ),
-					shortcode, clone, self = this;
+					shortcode, clone;
 
 				if ( attachments.type ) {
 					attrs.type = attachments.type;
@@ -478,13 +478,7 @@
 					delete attrs.orderby;
 				}
 
-				// Remove default attributes from the shortcode.
-				_.each( this.defaults, function( value, key ) {
-					attrs[ key ] = self.coerce( attrs, key );
-					if ( value === attrs[ key ] ) {
-						delete attrs[ key ];
-					}
-				});
+				attrs = this.setDefaults( attrs );
 
 				shortcode = new wp.shortcode({
 					tag:    this.tag,
@@ -573,11 +567,24 @@
 				}).open();
 
 				return this.frame;
+			},
+
+			setDefaults: function( attrs ) {
+				var self = this;
+				// Remove default attributes from the shortcode.
+				_.each( this.defaults, function( value, key ) {
+					attrs[ key ] = self.coerce( attrs, key );
+					if ( value === attrs[ key ] ) {
+						delete attrs[ key ];
+					}
+				});
+
+				return attrs;
 			}
-		});
+		}, attributes );
 	};
 
-	wp.media.galleryDefaults = {
+	wp.media._galleryDefaults = {
 		itemtag: 'dl',
 		icontag: 'dt',
 		captiontag: 'dd',
@@ -590,14 +597,27 @@
 	};
 
 	if ( wp.media.view.settings.galleryDefaults ) {
-		_.extend( wp.media.galleryDefaults, wp.media.view.settings.galleryDefaults );
+		wp.media.galleryDefaults = _.extend( {}, wp.media._galleryDefaults, wp.media.view.settings.galleryDefaults );
+	} else {
+		wp.media.galleryDefaults = wp.media._galleryDefaults;
 	}
 
 	wp.media.gallery = new wp.media.collection({
 		tag: 'gallery',
 		type : 'image',
 		editTitle : wp.media.view.l10n.editGalleryTitle,
-		defaults : wp.media.galleryDefaults
+		defaults : wp.media.galleryDefaults,
+
+		setDefaults: function( attrs ) {
+			var self = this, changed = ! _.isEqual( wp.media.galleryDefaults, wp.media._galleryDefaults );
+			_.each( this.defaults, function( value, key ) {
+				attrs[ key ] = self.coerce( attrs, key );
+				if ( value === attrs[ key ] && ( ! changed || value === wp.media._galleryDefaults[ key ] ) ) {
+					delete attrs[ key ];
+				}
+			} );
+			return attrs;
+		}
 	});
 
 	/**
@@ -1033,17 +1053,7 @@
 			options = options || {};
 
 			id = this.id( id );
-/*
-			// Save a bookmark of the caret position in IE.
-			if ( ! _.isUndefined( window.tinymce ) ) {
-				editor = tinymce.get( id );
 
-				if ( tinymce.isIE && editor && ! editor.isHidden() ) {
-					editor.focus();
-					editor.windowManager.insertimagebookmark = editor.selection.getBookmark();
-				}
-			}
-*/
 			workflow = this.get( id );
 
 			// Redo workflow if state has changed
