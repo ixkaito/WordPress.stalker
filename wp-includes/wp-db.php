@@ -191,7 +191,7 @@ class wpdb {
 	 * @access public
 	 * @var string
 	 */
-	 public $base_prefix;
+	public $base_prefix;
 
 	/**
 	 * Whether the database queries are ready to start executing.
