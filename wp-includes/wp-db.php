@@ -1615,12 +1615,12 @@ class wpdb {
 			$num_rows = 0;
 			if ( $this->use_mysqli ) {
 				while ( $row = @mysqli_fetch_object( $this->result ) ) {
-					$this->last_result[$num_rows] = $row;
+					$this->last_result[ $num_rows ] = $row;
 					$num_rows++;
 				}
 			} else {
 				while ( $row = @mysql_fetch_object( $this->result ) ) {
-					$this->last_result[$num_rows] = $row;
+					$this->last_result[ $num_rows ] = $row;
 					$num_rows++;
 				}
 			}
