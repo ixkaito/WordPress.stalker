@@ -1733,10 +1733,10 @@ class wpdb {
 		$fields = array_keys( $data );
 		$formatted_fields = array();
 		foreach ( $fields as $field ) {
-			if ( !empty( $format ) )
+			if ( ! empty( $format ) )
 				$form = ( $form = array_shift( $formats ) ) ? $form : $format[0];
-			elseif ( isset( $this->field_types[$field] ) )
-				$form = $this->field_types[$field];
+			elseif ( isset( $this->field_types[ $field ] ) )
+				$form = $this->field_types[ $field ];
 			else
 				$form = '%s';
 			$formatted_fields[] = $form;
