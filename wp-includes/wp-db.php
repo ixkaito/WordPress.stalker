@@ -1060,9 +1060,9 @@ class wpdb {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $k => $v ) {
 				if ( is_array( $v ) )
-					$data[$k] = $this->_escape( $v );
+					$data[ $k ] = $this->_escape( $v );
 				else
-					$data[$k] = $this->_real_escape( $v );
+					$data[ $k ] = $this->_real_escape( $v );
 			}
 		} else {
 			$data = $this->_real_escape( $data );
@@ -1090,9 +1090,9 @@ class wpdb {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $k => $v ) {
 				if ( is_array( $v ) )
-					$data[$k] = $this->escape( $v, 'recursive' );
+					$data[ $k ] = $this->escape( $v, 'recursive' );
 				else
-					$data[$k] = $this->_weak_escape( $v, 'internal' );
+					$data[ $k ] = $this->_weak_escape( $v, 'internal' );
 			}
 		} else {
 			$data = $this->_weak_escape( $data, 'internal' );
@@ -1920,14 +1920,14 @@ class wpdb {
 	 * @param int $x Optional. Column to return. Indexed from 0.
 	 * @return array Database query result. Array indexed from 0 by SQL result row number.
 	 */
-	public function get_col( $query = null , $x = 0 ) {
+	public function get_col( $query = null, $x = 0 ) {
 		if ( $query )
 			$this->query( $query );
 
 		$new_array = array();
 		// Extract the column values
 		for ( $i = 0, $j = count( $this->last_result ); $i < $j; $i++ ) {
-			$new_array[$i] = $this->get_var( null, $x, $i );
+			$new_array[ $i ] = $this->get_var( null, $x, $i );
 		}
 		return $new_array;
 	}
