@@ -1862,12 +1862,12 @@ class wpdb {
 			$this->query( $query );
 
 		// Extract var out of cached results based x,y vals
-		if ( !empty( $this->last_result[$y] ) ) {
-			$values = array_values( get_object_vars( $this->last_result[$y] ) );
+		if ( ! empty( $this->last_result[ $y ] ) ) {
+			$values = array_values( get_object_vars( $this->last_result[ $y ] ) );
 		}
 
 		// If there is a value return it else return null
-		return ( isset( $values[$x] ) && $values[$x] !== '' ) ? $values[$x] : null;
+		return ( isset( $values[ $x ] ) && $values[ $x ] !== '' ) ? $values[ $x ] : null;
 	}
 
 	/**
@@ -1890,18 +1890,18 @@ class wpdb {
 		else
 			return null;
 
-		if ( !isset( $this->last_result[$y] ) )
+		if ( ! isset( $this->last_result[ $y ] ) )
 			return null;
 
 		if ( $output == OBJECT ) {
-			return $this->last_result[$y] ? $this->last_result[$y] : null;
+			return $this->last_result[ $y ] ? $this->last_result[ $y ] : null;
 		} elseif ( $output == ARRAY_A ) {
-			return $this->last_result[$y] ? get_object_vars( $this->last_result[$y] ) : null;
+			return $this->last_result[ $y ] ? get_object_vars( $this->last_result[ $y ] ) : null;
 		} elseif ( $output == ARRAY_N ) {
-			return $this->last_result[$y] ? array_values( get_object_vars( $this->last_result[$y] ) ) : null;
+			return $this->last_result[ $y ] ? array_values( get_object_vars( $this->last_result[ $y ] ) ) : null;
 		} elseif ( strtoupper( $output ) === OBJECT ) {
 			// Back compat for OBJECT being previously case insensitive.
-			return $this->last_result[$y] ? $this->last_result[$y] : null;
+			return $this->last_result[ $y ] ? $this->last_result[ $y ] : null;
 		} else {
 			$this->print_error( " \$db->get_row(string query, output type, int offset) -- Output type must be one of: OBJECT, ARRAY_A, ARRAY_N" );
 		}
