@@ -1878,7 +1878,7 @@ class wpdb {
 	 * @since 0.71
 	 *
 	 * @param string|null $query SQL query.
-	 * @param string $output Optional. one of ARRAY_A | ARRAY_N | OBJECT constants. Return an associative array (column => value, ...),
+	 * @param string $output Optional. One of ARRAY_A | ARRAY_N | OBJECT constants. Return an associative array (column => value, ...),
 	 * 	a numerically indexed array (0 => value, ...) or an object ( ->column = value ), respectively.
 	 * @param int $y Optional. Row to return. Indexed from 0.
 	 * @return mixed Database query result in format specified by $output or null on failure
