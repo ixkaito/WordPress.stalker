@@ -1773,10 +1773,10 @@ class wpdb {
 		$formats = $format = (array) $format;
 		$bits = $wheres = array();
 		foreach ( (array) array_keys( $data ) as $field ) {
-			if ( !empty( $format ) )
+			if ( ! empty( $format ) )
 				$form = ( $form = array_shift( $formats ) ) ? $form : $format[0];
-			elseif ( isset($this->field_types[$field]) )
-				$form = $this->field_types[$field];
+			elseif ( isset( $this->field_types[ $field ] ) )
+				$form = $this->field_types[ $field ];
 			else
 				$form = '%s';
 			$bits[] = "`$field` = {$form}";
@@ -1784,10 +1784,10 @@ class wpdb {
 
 		$where_formats = $where_format = (array) $where_format;
 		foreach ( (array) array_keys( $where ) as $field ) {
-			if ( !empty( $where_format ) )
+			if ( ! empty( $where_format ) )
 				$form = ( $form = array_shift( $where_formats ) ) ? $form : $where_format[0];
-			elseif ( isset( $this->field_types[$field] ) )
-				$form = $this->field_types[$field];
+			elseif ( isset( $this->field_types[ $field ] ) )
+				$form = $this->field_types[ $field ];
 			else
 				$form = '%s';
 			$wheres[] = "`$field` = {$form}";
@@ -1826,7 +1826,7 @@ class wpdb {
 		$where_formats = $where_format = (array) $where_format;
 
 		foreach ( array_keys( $where ) as $field ) {
-			if ( !empty( $where_format ) ) {
+			if ( ! empty( $where_format ) ) {
 				$form = ( $form = array_shift( $where_formats ) ) ? $form : $where_format[0];
 			} elseif ( isset( $this->field_types[ $field ] ) ) {
 				$form = $this->field_types[ $field ];
