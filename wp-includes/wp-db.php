@@ -2027,12 +2027,12 @@ class wpdb {
 				$i = 0;
 				$new_array = array();
 				foreach( (array) $this->col_info as $col ) {
-					$new_array[$i] = $col->{$info_type};
+					$new_array[ $i ] = $col->{$info_type};
 					$i++;
 				}
 				return $new_array;
 			} else {
-				return $this->col_info[$col_offset]->{$info_type};
+				return $this->col_info[ $col_offset ]->{$info_type};
 			}
 		}
 	}
@@ -2072,14 +2072,14 @@ class wpdb {
 	 * @return false|void
 	 */
 	public function bail( $message, $error_code = '500' ) {
-		if ( !$this->show_errors ) {
+		if ( ! $this->show_errors ) {
 			if ( class_exists( 'WP_Error' ) )
-				$this->error = new WP_Error($error_code, $message);
+				$this->error = new WP_Error( $error_code, $message );
 			else
 				$this->error = $message;
 			return false;
 		}
-		wp_die($message);
+		wp_die( $message );
 	}
 
 	/**
@@ -2094,8 +2094,8 @@ class wpdb {
 	public function check_database_version() {
 		global $wp_version, $required_mysql_version;
 		// Make sure the server has the required MySQL version
-		if ( version_compare($this->db_version(), $required_mysql_version, '<') )
-			return new WP_Error('database_version', sprintf( __( '<strong>ERROR</strong>: WordPress %1$s requires MySQL %2$s or higher' ), $wp_version, $required_mysql_version ));
+		if ( version_compare( $this->db_version(), $required_mysql_version, '<' ) )
+			return new WP_Error( 'database_version', sprintf( __( '<strong>ERROR</strong>: WordPress %1$s requires MySQL %2$s or higher' ), $wp_version, $required_mysql_version ) );
 	}
 
 	/**
