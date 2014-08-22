@@ -1970,7 +1970,7 @@ class wpdb {
 		} elseif ( $output == ARRAY_A || $output == ARRAY_N ) {
 			// Return an integer-keyed array of...
 			if ( $this->last_result ) {
-				foreach( (array) $this->last_result as $row ) {
+				foreach ( (array) $this->last_result as $row ) {
 					if ( $output == ARRAY_N ) {
 						// ...integer-keyed row arrays
 						$new_array[] = array_values( get_object_vars( $row ) );
