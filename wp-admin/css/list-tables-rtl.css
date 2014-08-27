@@ -595,6 +595,11 @@ th.asc:hover span.sorting-indicator {
 	padding: 2px 0 0 8px;
 }
 
+.wp-filter .actions {
+	display: inline-block;
+	vertical-align: middle;
+}
+
 .tablenav .delete {
 	margin-left: 20px;
 }
@@ -617,9 +622,16 @@ classes exist in paginate_links() but not seen in list table output. */
 	color: #2ea2cc;
 }
 
-.view-switch {
+.tablenav .view-switch {
 	float: left;
 	margin: 5px 8px 0 16px;
+}
+
+.wp-filter .view-switch {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 14px 0;
+	margin: 0 0 0 20px;
 }
 
 .view-switch a {
@@ -679,6 +691,10 @@ classes exist in paginate_links() but not seen in list table output. */
 }
 .screen-per-page {
 	width: 4em;
+}
+
+#posts-filter .wp-filter {
+	margin-bottom: 0;
 }
 
 #posts-filter fieldset {
@@ -1225,7 +1241,6 @@ tr.active + tr.plugin-update-tr .plugin-update .update-message {
 	margin-top: 1.5em;
 }
 
-.plugin-group:first-of-type,
 .plugin-group h3 {
 	margin-top: 0;
 }
@@ -1297,16 +1312,12 @@ div.action-links,
 }
 
 .plugin-card h4 {
-	float: right;
 	margin: 0 0 12px;
 	font-size: 18px;
 }
 
-.plugin-card .desc {
-	clear: right;
-}
-
 .plugin-action-buttons {
+	clear: left;
 	float: left;
 	margin-right: 2em;
 	margin-bottom: 1em;
@@ -1342,12 +1353,59 @@ div.action-links,
 .plugin-card .column-downloaded {
 	float: right;
 	clear: right;
+	max-width: 180px;
 }
 
 .plugin-card .column-updated,
 .plugin-card .column-compatibility {
+	text-align: left;
 	float: left;
 	clear: left;
+	width: 65%;
+	width: -webkit-calc( 100% - 180px );
+	width: calc( 100% - 180px );
+}
+
+.plugin-card .column-compatibility span:before {
+	font: normal 20px/.5 'dashicons';
+	speak: none;
+	display: inline-block;
+	padding: 0;
+	top: 4px;
+	right: -2px;
+	position: relative;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-decoration: none !important;
+	color: #444;
+}
+.plugin-card .compatibility-incompatible:before {
+	content: '\f158';
+}
+
+.plugin-card .compatibility-compatible:before {
+	content: '\f147';
+}
+
+.plugin-card .compatibility-untested strong {
+	font-weight: normal;
+}
+
+.plugin-icon {
+	width: 128px;
+	height: 128px;
+	float: right;
+	margin: 0 0 20px 20px;
+}
+
+.no-plugin-results {
+	color: #999;
+	font-size: 18px;
+	font-style: normal;
+	margin: 0;
+	padding: 100px 0 0;
+	text-align: center;
 }
 
 /* ms */
@@ -1378,7 +1436,7 @@ div.action-links,
 	}
 
 	.tablenav.top {
-		margin: 0;
+		margin: 20px 0 5px 0;
 	}
 
 	.tablenav.bottom {
@@ -1394,7 +1452,8 @@ div.action-links,
 		display: block;
 	}
 
-	.tablenav.top .actions, .view-switch {
+	.tablenav.top .actions,
+	.tablenav .view-switch {
 		display: none;
 	}
 

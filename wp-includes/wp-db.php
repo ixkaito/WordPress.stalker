@@ -191,7 +191,7 @@ class wpdb {
 	 * @access public
 	 * @var string
 	 */
-	public $base_prefix;
+	 public $base_prefix;
 
 	/**
 	 * Whether the database queries are ready to start executing.
@@ -203,7 +203,7 @@ class wpdb {
 	var $ready = false;
 
 	/**
-	 * {@internal Missing Description}
+	 * {@internal Missing Description}}
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -212,7 +212,7 @@ class wpdb {
 	public $blogid = 0;
 
 	/**
-	 * {@internal Missing Description}
+	 * {@internal Missing Description}}
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -655,7 +655,7 @@ class wpdb {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param string $name The private member to check
+	 * @param string $name  The private member to check
 	 *
 	 * @return bool If the member is set or not
 	 */
@@ -668,7 +668,7 @@ class wpdb {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param string $name The private member to unset
+	 * @param string $name  The private member to unset
 	 */
 	public function __unset( $name ) {
 		unset( $this->$name );
@@ -680,7 +680,7 @@ class wpdb {
 	 * @since 3.1.0
 	 */
 	public function init_charset() {
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( function_exists('is_multisite') && is_multisite() ) {
 			$this->charset = 'utf8';
 			if ( defined( 'DB_COLLATE' ) && DB_COLLATE )
 				$this->collate = DB_COLLATE;
@@ -976,7 +976,7 @@ class wpdb {
 	 * @return null Always null.
 	 */
 	public function select( $db, $dbh = null ) {
-		if ( is_null( $dbh ) )
+		if ( is_null($dbh) )
 			$dbh = $this->dbh;
 
 		if ( $this->use_mysqli ) {
@@ -1059,10 +1059,10 @@ class wpdb {
 	function _escape( $data ) {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $k => $v ) {
-				if ( is_array( $v ) )
-					$data[ $k ] = $this->_escape( $v );
+				if ( is_array($v) )
+					$data[$k] = $this->_escape( $v );
 				else
-					$data[ $k ] = $this->_real_escape( $v );
+					$data[$k] = $this->_real_escape( $v );
 			}
 		} else {
 			$data = $this->_real_escape( $data );
@@ -1090,9 +1090,9 @@ class wpdb {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $k => $v ) {
 				if ( is_array( $v ) )
-					$data[ $k ] = $this->escape( $v, 'recursive' );
+					$data[$k] = $this->escape( $v, 'recursive' );
 				else
-					$data[ $k ] = $this->_weak_escape( $v, 'internal' );
+					$data[$k] = $this->_weak_escape( $v, 'internal' );
 			}
 		} else {
 			$data = $this->_weak_escape( $data, 'internal' );
@@ -1167,7 +1167,7 @@ class wpdb {
 			$args = $args[0];
 		$query = str_replace( "'%s'", '%s', $query ); // in case someone mistakenly already singlequoted it
 		$query = str_replace( '"%s"', '%s', $query ); // doublequote unquoting
-		$query = preg_replace( '|(?<!%)%f|', '%F', $query ); // Force floats to be locale unaware
+		$query = preg_replace( '|(?<!%)%f|' , '%F', $query ); // Force floats to be locale unaware
 		$query = preg_replace( '|(?<!%)%s|', "'%s'", $query ); // quote the strings, avoiding escaped strings like %%s
 		array_walk( $args, array( $this, 'escape_by_ref' ) );
 		return @vsprintf( $query, $args );
@@ -1211,7 +1211,7 @@ class wpdb {
 	public function print_error( $str = '' ) {
 		global $EZSQL_ERROR;
 
-		if ( ! $str ) {
+		if ( !$str ) {
 			if ( $this->use_mysqli ) {
 				$str = mysqli_error( $this->dbh );
 			} else {
@@ -1450,7 +1450,7 @@ class wpdb {
 	 * Check that the connection to the database is still up. If not, try to reconnect.
 	 *
 	 * If this function is unable to reconnect, it will forcibly die, or if after the
-	 * template_redirect hook has been fired, return false instead.
+	 * the template_redirect hook has been fired, return false instead.
 	 *
 	 * If $allow_bail is false, the lack of database connection will need
 	 * to be handled manually.
@@ -1615,12 +1615,12 @@ class wpdb {
 			$num_rows = 0;
 			if ( $this->use_mysqli ) {
 				while ( $row = @mysqli_fetch_object( $this->result ) ) {
-					$this->last_result[ $num_rows ] = $row;
+					$this->last_result[$num_rows] = $row;
 					$num_rows++;
 				}
 			} else {
 				while ( $row = @mysql_fetch_object( $this->result ) ) {
-					$this->last_result[ $num_rows ] = $row;
+					$this->last_result[$num_rows] = $row;
 					$num_rows++;
 				}
 			}
@@ -1733,10 +1733,10 @@ class wpdb {
 		$fields = array_keys( $data );
 		$formatted_fields = array();
 		foreach ( $fields as $field ) {
-			if ( ! empty( $format ) )
+			if ( !empty( $format ) )
 				$form = ( $form = array_shift( $formats ) ) ? $form : $format[0];
-			elseif ( isset( $this->field_types[ $field ] ) )
-				$form = $this->field_types[ $field ];
+			elseif ( isset( $this->field_types[$field] ) )
+				$form = $this->field_types[$field];
 			else
 				$form = '%s';
 			$formatted_fields[] = $form;
@@ -1773,10 +1773,10 @@ class wpdb {
 		$formats = $format = (array) $format;
 		$bits = $wheres = array();
 		foreach ( (array) array_keys( $data ) as $field ) {
-			if ( ! empty( $format ) )
+			if ( !empty( $format ) )
 				$form = ( $form = array_shift( $formats ) ) ? $form : $format[0];
-			elseif ( isset( $this->field_types[ $field ] ) )
-				$form = $this->field_types[ $field ];
+			elseif ( isset($this->field_types[$field]) )
+				$form = $this->field_types[$field];
 			else
 				$form = '%s';
 			$bits[] = "`$field` = {$form}";
@@ -1784,10 +1784,10 @@ class wpdb {
 
 		$where_formats = $where_format = (array) $where_format;
 		foreach ( (array) array_keys( $where ) as $field ) {
-			if ( ! empty( $where_format ) )
+			if ( !empty( $where_format ) )
 				$form = ( $form = array_shift( $where_formats ) ) ? $form : $where_format[0];
-			elseif ( isset( $this->field_types[ $field ] ) )
-				$form = $this->field_types[ $field ];
+			elseif ( isset( $this->field_types[$field] ) )
+				$form = $this->field_types[$field];
 			else
 				$form = '%s';
 			$wheres[] = "`$field` = {$form}";
@@ -1826,7 +1826,7 @@ class wpdb {
 		$where_formats = $where_format = (array) $where_format;
 
 		foreach ( array_keys( $where ) as $field ) {
-			if ( ! empty( $where_format ) ) {
+			if ( !empty( $where_format ) ) {
 				$form = ( $form = array_shift( $where_formats ) ) ? $form : $where_format[0];
 			} elseif ( isset( $this->field_types[ $field ] ) ) {
 				$form = $this->field_types[ $field ];
@@ -1862,12 +1862,12 @@ class wpdb {
 			$this->query( $query );
 
 		// Extract var out of cached results based x,y vals
-		if ( ! empty( $this->last_result[ $y ] ) ) {
-			$values = array_values( get_object_vars( $this->last_result[ $y ] ) );
+		if ( !empty( $this->last_result[$y] ) ) {
+			$values = array_values( get_object_vars( $this->last_result[$y] ) );
 		}
 
 		// If there is a value return it else return null
-		return ( isset( $values[ $x ] ) && $values[ $x ] !== '' ) ? $values[ $x ] : null;
+		return ( isset( $values[$x] ) && $values[$x] !== '' ) ? $values[$x] : null;
 	}
 
 	/**
@@ -1878,7 +1878,7 @@ class wpdb {
 	 * @since 0.71
 	 *
 	 * @param string|null $query SQL query.
-	 * @param string $output Optional. One of ARRAY_A | ARRAY_N | OBJECT constants. Return an associative array (column => value, ...),
+	 * @param string $output Optional. one of ARRAY_A | ARRAY_N | OBJECT constants. Return an associative array (column => value, ...),
 	 * 	a numerically indexed array (0 => value, ...) or an object ( ->column = value ), respectively.
 	 * @param int $y Optional. Row to return. Indexed from 0.
 	 * @return mixed Database query result in format specified by $output or null on failure
@@ -1890,18 +1890,18 @@ class wpdb {
 		else
 			return null;
 
-		if ( ! isset( $this->last_result[ $y ] ) )
+		if ( !isset( $this->last_result[$y] ) )
 			return null;
 
 		if ( $output == OBJECT ) {
-			return $this->last_result[ $y ] ? $this->last_result[ $y ] : null;
+			return $this->last_result[$y] ? $this->last_result[$y] : null;
 		} elseif ( $output == ARRAY_A ) {
-			return $this->last_result[ $y ] ? get_object_vars( $this->last_result[ $y ] ) : null;
+			return $this->last_result[$y] ? get_object_vars( $this->last_result[$y] ) : null;
 		} elseif ( $output == ARRAY_N ) {
-			return $this->last_result[ $y ] ? array_values( get_object_vars( $this->last_result[ $y ] ) ) : null;
+			return $this->last_result[$y] ? array_values( get_object_vars( $this->last_result[$y] ) ) : null;
 		} elseif ( strtoupper( $output ) === OBJECT ) {
 			// Back compat for OBJECT being previously case insensitive.
-			return $this->last_result[ $y ] ? $this->last_result[ $y ] : null;
+			return $this->last_result[$y] ? $this->last_result[$y] : null;
 		} else {
 			$this->print_error( " \$db->get_row(string query, output type, int offset) -- Output type must be one of: OBJECT, ARRAY_A, ARRAY_N" );
 		}
@@ -1920,14 +1920,14 @@ class wpdb {
 	 * @param int $x Optional. Column to return. Indexed from 0.
 	 * @return array Database query result. Array indexed from 0 by SQL result row number.
 	 */
-	public function get_col( $query = null, $x = 0 ) {
+	public function get_col( $query = null , $x = 0 ) {
 		if ( $query )
 			$this->query( $query );
 
 		$new_array = array();
 		// Extract the column values
 		for ( $i = 0, $j = count( $this->last_result ); $i < $j; $i++ ) {
-			$new_array[ $i ] = $this->get_var( null, $x, $i );
+			$new_array[$i] = $this->get_var( null, $x, $i );
 		}
 		return $new_array;
 	}
@@ -1970,7 +1970,7 @@ class wpdb {
 		} elseif ( $output == ARRAY_A || $output == ARRAY_N ) {
 			// Return an integer-keyed array of...
 			if ( $this->last_result ) {
-				foreach ( (array) $this->last_result as $row ) {
+				foreach( (array) $this->last_result as $row ) {
 					if ( $output == ARRAY_N ) {
 						// ...integer-keyed row arrays
 						$new_array[] = array_values( get_object_vars( $row ) );
@@ -2027,12 +2027,12 @@ class wpdb {
 				$i = 0;
 				$new_array = array();
 				foreach( (array) $this->col_info as $col ) {
-					$new_array[ $i ] = $col->{$info_type};
+					$new_array[$i] = $col->{$info_type};
 					$i++;
 				}
 				return $new_array;
 			} else {
-				return $this->col_info[ $col_offset ]->{$info_type};
+				return $this->col_info[$col_offset]->{$info_type};
 			}
 		}
 	}
@@ -2072,14 +2072,14 @@ class wpdb {
 	 * @return false|void
 	 */
 	public function bail( $message, $error_code = '500' ) {
-		if ( ! $this->show_errors ) {
+		if ( !$this->show_errors ) {
 			if ( class_exists( 'WP_Error' ) )
-				$this->error = new WP_Error( $error_code, $message );
+				$this->error = new WP_Error($error_code, $message);
 			else
 				$this->error = $message;
 			return false;
 		}
-		wp_die( $message );
+		wp_die($message);
 	}
 
 	/**
@@ -2094,8 +2094,8 @@ class wpdb {
 	public function check_database_version() {
 		global $wp_version, $required_mysql_version;
 		// Make sure the server has the required MySQL version
-		if ( version_compare( $this->db_version(), $required_mysql_version, '<' ) )
-			return new WP_Error( 'database_version', sprintf( __( '<strong>ERROR</strong>: WordPress %1$s requires MySQL %2$s or higher' ), $wp_version, $required_mysql_version ) );
+		if ( version_compare($this->db_version(), $required_mysql_version, '<') )
+			return new WP_Error('database_version', sprintf( __( '<strong>ERROR</strong>: WordPress %1$s requires MySQL %2$s or higher' ), $wp_version, $required_mysql_version ));
 	}
 
 	/**
@@ -2151,7 +2151,7 @@ class wpdb {
 				return version_compare( $version, '4.1', '>=' );
 			case 'set_charset' :
 				return version_compare( $version, '5.0.7', '>=' );
-		}
+		};
 
 		return false;
 	}

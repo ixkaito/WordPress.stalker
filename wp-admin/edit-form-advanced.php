@@ -490,13 +490,13 @@ do_action( 'edit_form_after_title', $post );
 
 if ( post_type_supports($post_type, 'editor') ) {
 ?>
-<div id="postdivrich" class="postarea edit-form-section<?php if ( get_user_setting( 'editor_expand', 'on' ) === 'on' ) { echo ' wp-editor-expand'; } ?>">
+<div id="postdivrich" class="postarea<?php if ( get_user_setting( 'editor_expand', 'on' ) === 'on' ) { echo ' wp-editor-expand'; } ?>">
 
 <?php wp_editor( $post->post_content, 'content', array(
 	'dfw' => true,
 	'drag_drop_upload' => true,
 	'tabfocus_elements' => 'insert-media-button-1,save-post',
-	'editor_height' => 360,
+	'editor_height' => 300,
 	'tinymce' => array(
 		'resize' => false,
 		'wp_autoresize_on' => ( ! empty( $_wp_autoresize_on ) && get_user_setting( 'editor_expand', 'on' ) === 'on' ),

@@ -2677,7 +2677,7 @@ function wp_ajax_parse_embed() {
 
 	if ( has_shortcode( $parsed, 'audio' ) || has_shortcode( $parsed, 'video' ) ) {
 		$styles = '';
-		$mce_styles = wp_media_mce_styles();
+		$mce_styles = wpview_media_sandbox_styles();
 		foreach ( $mce_styles as $style ) {
 			$styles .= sprintf( '<link rel="stylesheet" href="%s"/>', $style );
 		}
@@ -2705,7 +2705,9 @@ function wp_ajax_parse_embed() {
 		) );
 	}
 
-	wp_send_json_success( $parsed );
+	wp_send_json_success( array(
+		'body' => $parsed
+	) );
 }
 
 function wp_ajax_parse_media_shortcode() {
@@ -2715,20 +2717,34 @@ function wp_ajax_parse_media_shortcode() {
 		wp_send_json_error();
 	}
 
-	setup_postdata( $post );
-
-	ob_start();
-
-	$styles = wp_media_mce_styles();
-	foreach ( $styles as $style ) {
-		printf( '<link rel="stylesheet" href="%s"/>', $style );
+	if ( empty( $_POST['shortcode'] ) || ! current_user_can( 'edit_post', $post->ID ) ) {
+		wp_send_json_error();
 	}
 
-	echo do_shortcode( wp_unslash( $_REQUEST['shortcode'] ) );
+	setup_postdata( $post );
+	$shortcode = do_shortcode( wp_unslash( $_REQUEST['shortcode'] ) );
+
+	if ( empty( $shortcode ) ) {
+		wp_send_json_error( array(
+			'type' => 'no-items',
+			'message' => __( 'No items found.' ),
+		) );
+	}
+
+	$head = '';
+	$styles = wpview_media_sandbox_styles();
+
+	foreach ( $styles as $style ) {
+		$head .= '<link type="text/css" rel="stylesheet" href="' . $style . '">';
+	}
 
 	if ( ! empty( $wp_scripts ) ) {
 		$wp_scripts->done = array();
 	}
+
+	ob_start();
+
+	echo $shortcode;
 
 	if ( 'playlist' === $_REQUEST['type'] ) {
 		wp_underscore_playlist_templates();
@@ -2738,5 +2754,8 @@ function wp_ajax_parse_media_shortcode() {
 		wp_print_scripts( 'wp-mediaelement' );
 	}
 
-	wp_send_json_success( ob_get_clean() );
+	wp_send_json_success( array(
+		'head' => $head,
+		'body' => ob_get_clean()
+	) );
 }

@@ -65,9 +65,10 @@
 				mode:      [ 'grid', 'edit' ]
 			});
 
+			this.$body = $( document.body );
 			this.$window = $( window );
 			this.$adminBar = $( '#wpadminbar' );
-			this.$window.on( 'scroll', _.debounce( _.bind( this.fixPosition, this ), 15 ) );
+			this.$window.on( 'scroll resize', _.debounce( _.bind( this.fixPosition, this ), 15 ) );
 			$( document ).on( 'click', '.add-new-h2', _.bind( this.addNewClickHandler, this ) );
 
 			// Ensure core and media grid view UI is enabled.
@@ -135,7 +136,8 @@
 					content:            'browse',
 					toolbar:            'select',
 					contentUserSetting: false,
-					filterable:         'all'
+					filterable:         'all',
+					autoSelect:         false
 				})
 			]);
 		},
@@ -148,6 +150,24 @@
 
 			// Handle a frame-level event for editing an attachment.
 			this.on( 'edit:attachment', this.openEditAttachmentModal, this );
+
+			this.on( 'select:activate', this.bindKeydown, this );
+			this.on( 'select:deactivate', this.unbindKeydown, this );
+		},
+
+		handleKeydown: function( e ) {
+			if ( 27 === e.which ) {
+				e.preventDefault();
+				this.deactivateMode( 'select' ).activateMode( 'edit' );
+			}
+		},
+
+		bindKeydown: function() {
+			this.$body.on( 'keydown.select', _.bind( this.handleKeydown, this ) );
+		},
+
+		unbindKeydown: function() {
+			this.$body.off( 'keydown.select' );
 		},
 
 		fixPosition: function() {
@@ -159,7 +179,8 @@
 			$browser = this.$('.attachments-browser');
 			$toolbar = $browser.find('.media-toolbar');
 
-			if ( $browser.offset().top < this.$window.scrollTop() + this.$adminBar.height() ) {
+			// Offset doesn't appear to take top margin into account, hence +16
+			if ( ( $browser.offset().top + 16 ) < this.$window.scrollTop() + this.$adminBar.height() ) {
 				$browser.addClass( 'fixed' );
 				$toolbar.css('width', $browser.width() + 'px');
 			} else {
@@ -226,7 +247,7 @@
 		},
 
 		sidebarVisibility: function() {
-			this.browserView.$( '.media-sidebar' ).toggle( this.errors.length );
+			this.browserView.$( '.media-sidebar' ).toggle( !! this.errors.length );
 		},
 
 		bindDeferred: function() {
@@ -306,10 +327,20 @@
 
 		// Show the modal with a specific item
 		showItem: function( query ) {
-			var library = media.frame.state().get('library');
+			var library = media.frame.state().get('library'), item;
 
 			// Trigger the media frame to open the correct item
-			media.frame.trigger( 'edit:attachment', library.findWhere( { id: parseInt( query, 10 ) } ) );
+			item = library.findWhere( { id: parseInt( query, 10 ) } );
+			if ( item ) {
+				media.frame.trigger( 'edit:attachment', item );
+			} else {
+				item = media.attachment( query );
+				media.frame.listenTo( item, 'change', function( model ) {
+					media.frame.stopListening( item );
+					media.frame.trigger( 'edit:attachment', model );
+				} );
+				item.fetch();
+			}
 		}
 	});
 
@@ -355,8 +386,9 @@
 		regions:   [ 'title', 'content' ],
 
 		events: {
-			'click .left':              'previousMediaItem',
-			'click .right':             'nextMediaItem'
+			'click .left':  'previousMediaItem',
+			'click .right': 'nextMediaItem',
+			'keydown':      'keyEvent'
 		},
 
 		initialize: function() {
@@ -373,9 +405,6 @@
 
 			if ( this.options.model ) {
 				this.model = this.options.model;
-			} else {
-				// this is a hack
-				this.model = this.library.at( 0 );
 			}
 
 			this.bindHandlers();
@@ -383,9 +412,7 @@
 			this.createModal();
 
 			this.title.mode( 'default' );
-
-			this.options.hasPrevious = this.hasPrevious();
-			this.options.hasNext = this.hasNext();
+			this.toggleNav();
 		},
 
 		bindHandlers: function() {
@@ -493,6 +520,11 @@
 			view.on( 'ready', view.loadEditor );
 		},
 
+		toggleNav: function() {
+			this.$('.left').toggleClass( 'disabled', ! this.hasPrevious() );
+			this.$('.right').toggleClass( 'disabled', ! this.hasNext() );
+		},
+
 		/**
 		 * Rerender the view.
 		 */
@@ -503,8 +535,8 @@
 			} else {
 				this.content.render();
 			}
-			this.$('.left').toggleClass( 'disabled', ! this.hasPrevious() );
-			this.$('.right').toggleClass( 'disabled', ! this.hasNext() );
+
+			this.toggleNav();
 		},
 
 		/**
@@ -512,11 +544,12 @@
 		 */
 		previousMediaItem: function() {
 			if ( ! this.hasPrevious() ) {
+				this.$( '.left' ).blur();
 				return;
 			}
 			this.model = this.library.at( this.getCurrentIndex() - 1 );
-
 			this.rerender();
+			this.$( '.left' ).focus();
 		},
 
 		/**
@@ -524,11 +557,12 @@
 		 */
 		nextMediaItem: function() {
 			if ( ! this.hasNext() ) {
+				this.$( '.right' ).blur();
 				return;
 			}
 			this.model = this.library.at( this.getCurrentIndex() + 1 );
-
 			this.rerender();
+			this.$( '.right' ).focus();
 		},
 
 		getCurrentIndex: function() {
@@ -546,16 +580,8 @@
 		 * Respond to the keyboard events: right arrow, left arrow, escape.
 		 */
 		keyEvent: function( event ) {
-			var $target = $( event.target );
-
-			//Don't go left/right if we are in a textarea or input field
-			if ( $target.is( 'input' ) || $target.is( 'textarea' ) ) {
-				return event;
-			}
-
-			// Escape key, while in the Edit Image mode
-			if ( 27 === event.keyCode ) {
-				this.modal.close();
+			if ( 'INPUT' === event.target.tagName && ! ( event.target.readOnly || event.target.disabled ) ) {
+				return;
 			}
 
 			// The right arrow key
@@ -577,12 +603,17 @@
 		initialize: function() {
 			media.view.Button.prototype.initialize.apply( this, arguments );
 			this.listenTo( this.controller, 'select:activate select:deactivate', this.toggleBulkEditHandler );
+			this.listenTo( this.controller, 'selection:action:done', this.back );
+		},
+
+		back: function () {
+			this.controller.deactivateMode( 'select' ).activateMode( 'edit' );
 		},
 
 		click: function() {
 			media.view.Button.prototype.click.apply( this, arguments );
 			if ( this.controller.isModeActive( 'select' ) ) {
-				this.controller.deactivateMode( 'select' ).activateMode( 'edit' );
+				this.back();
 			} else {
 				this.controller.deactivateMode( 'edit' ).activateMode( 'select' );
 			}

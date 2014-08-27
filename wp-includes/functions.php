@@ -3502,19 +3502,6 @@ function is_ssl() {
 }
 
 /**
- * Determine if the scheme of the given URL is https.
- *
- * @since 4.0.0
- *
- * @param string $url The URL.
- * @return bool True if the given URL uses https, false if not (or if the URL
- *              is not valid).
- */
-function is_https_url( $url ) {
-	return ( 'https' === parse_url( $url, PHP_URL_SCHEME ) );
-}
-
-/**
  * Whether SSL login should be forced.
  *
  * @since 2.6.0
@@ -3578,7 +3565,7 @@ function wp_guess_url() {
 			if ( false !== strpos( $_SERVER['SCRIPT_FILENAME'], $abspath_fix ) ) {
 				// Request is hitting a file inside ABSPATH
 				$directory = str_replace( ABSPATH, '', $script_filename_dir );
-				// Strip off the sub directory, and any file/query params
+				// Strip off the sub directory, and any file/query paramss
 				$path = preg_replace( '#/' . preg_quote( $directory, '#' ) . '/[^/]*$#i', '' , $_SERVER['REQUEST_URI'] );
 			} elseif ( false !== strpos( $abspath_fix, $script_filename_dir ) ) {
 				// Request is hitting a file above ABSPATH
