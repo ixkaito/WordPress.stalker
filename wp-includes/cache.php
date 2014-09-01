@@ -679,7 +679,7 @@ class WP_Object_Cache {
 		global $blog_id;
 
 		$this->multisite = is_multisite();
-		$this->blog_prefix =  $this->multisite ? $blog_id . ':' : '';
+		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '';
 
 
 		/**
