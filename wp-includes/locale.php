@@ -156,8 +156,8 @@ class WP_Locale {
 		$this->month_abbrev[__('November')]  = /* translators: three-letter abbreviation of the month */ __('Nov_November_abbreviation');
 		$this->month_abbrev[__('December')]  = /* translators: three-letter abbreviation of the month */ __('Dec_December_abbreviation');
 
-		foreach ($this->month_abbrev as $month_ => $month_abbrev_) {
-			$this->month_abbrev[$month_] = preg_replace('/_.+_abbreviation$/', '', $month_abbrev_);
+		foreach ( $this->month_abbrev as $month_ => $month_abbrev_ ) {
+			$this->month_abbrev[ $month_ ] = preg_replace( '/_.+_abbreviation$/', '', $month_abbrev_ );
 		}
 
 		// The Meridiems
