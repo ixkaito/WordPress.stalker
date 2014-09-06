@@ -114,8 +114,8 @@ class WP_Locale {
 		$this->weekday_initial[__('Friday')]    = /* translators: one-letter abbreviation of the weekday */ __('F_Friday_initial');
 		$this->weekday_initial[__('Saturday')]  = /* translators: one-letter abbreviation of the weekday */ __('S_Saturday_initial');
 
-		foreach ($this->weekday_initial as $weekday_ => $weekday_initial_) {
-			$this->weekday_initial[$weekday_] = preg_replace('/_.+_initial$/', '', $weekday_initial_);
+		foreach ( $this->weekday_initial as $weekday_ => $weekday_initial_ ) {
+			$this->weekday_initial[ $weekday_ ] = preg_replace( '/_.+_initial$/', '', $weekday_initial_ );
 		}
 
 		// Abbreviations for each day.
