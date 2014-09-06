@@ -143,18 +143,18 @@ class WP_Locale {
 
 		// Abbreviations for each month. Uses the same hack as above to get around the
 		// 'May' duplication.
-		$this->month_abbrev[__('January')] = /* translators: three-letter abbreviation of the month */ __('Jan_January_abbreviation');
-		$this->month_abbrev[__('February')] = /* translators: three-letter abbreviation of the month */ __('Feb_February_abbreviation');
-		$this->month_abbrev[__('March')] = /* translators: three-letter abbreviation of the month */ __('Mar_March_abbreviation');
-		$this->month_abbrev[__('April')] = /* translators: three-letter abbreviation of the month */ __('Apr_April_abbreviation');
-		$this->month_abbrev[__('May')] = /* translators: three-letter abbreviation of the month */ __('May_May_abbreviation');
-		$this->month_abbrev[__('June')] = /* translators: three-letter abbreviation of the month */ __('Jun_June_abbreviation');
-		$this->month_abbrev[__('July')] = /* translators: three-letter abbreviation of the month */ __('Jul_July_abbreviation');
-		$this->month_abbrev[__('August')] = /* translators: three-letter abbreviation of the month */ __('Aug_August_abbreviation');
+		$this->month_abbrev[__('January')]   = /* translators: three-letter abbreviation of the month */ __('Jan_January_abbreviation');
+		$this->month_abbrev[__('February')]  = /* translators: three-letter abbreviation of the month */ __('Feb_February_abbreviation');
+		$this->month_abbrev[__('March')]     = /* translators: three-letter abbreviation of the month */ __('Mar_March_abbreviation');
+		$this->month_abbrev[__('April')]     = /* translators: three-letter abbreviation of the month */ __('Apr_April_abbreviation');
+		$this->month_abbrev[__('May')]       = /* translators: three-letter abbreviation of the month */ __('May_May_abbreviation');
+		$this->month_abbrev[__('June')]      = /* translators: three-letter abbreviation of the month */ __('Jun_June_abbreviation');
+		$this->month_abbrev[__('July')]      = /* translators: three-letter abbreviation of the month */ __('Jul_July_abbreviation');
+		$this->month_abbrev[__('August')]    = /* translators: three-letter abbreviation of the month */ __('Aug_August_abbreviation');
 		$this->month_abbrev[__('September')] = /* translators: three-letter abbreviation of the month */ __('Sep_September_abbreviation');
-		$this->month_abbrev[__('October')] = /* translators: three-letter abbreviation of the month */ __('Oct_October_abbreviation');
-		$this->month_abbrev[__('November')] = /* translators: three-letter abbreviation of the month */ __('Nov_November_abbreviation');
-		$this->month_abbrev[__('December')] = /* translators: three-letter abbreviation of the month */ __('Dec_December_abbreviation');
+		$this->month_abbrev[__('October')]   = /* translators: three-letter abbreviation of the month */ __('Oct_October_abbreviation');
+		$this->month_abbrev[__('November')]  = /* translators: three-letter abbreviation of the month */ __('Nov_November_abbreviation');
+		$this->month_abbrev[__('December')]  = /* translators: three-letter abbreviation of the month */ __('Dec_December_abbreviation');
 
 		foreach ($this->month_abbrev as $month_ => $month_abbrev_) {
 			$this->month_abbrev[$month_] = preg_replace('/_.+_abbreviation$/', '', $month_abbrev_);
