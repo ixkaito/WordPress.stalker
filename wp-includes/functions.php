@@ -2390,7 +2390,7 @@ function wp_die( $message = '', $title = '', $args = array() ) {
  */
 function _default_wp_die_handler( $message, $title = '', $args = array() ) {
 	$defaults = array( 'response' => 500 );
-	$r = wp_parse_args($args, $defaults);
+	$r = wp_parse_args( $args, $defaults );
 
 	$have_gettext = function_exists('__');
 
@@ -2422,17 +2422,17 @@ function _default_wp_die_handler( $message, $title = '', $args = array() ) {
 	}
 
 	if ( ! did_action( 'admin_head' ) ) :
-		if ( !headers_sent() ) {
+		if ( ! headers_sent() ) {
 			status_header( $r['response'] );
 			nocache_headers();
 			header( 'Content-Type: text/html; charset=utf-8' );
 		}
 
-		if ( empty($title) )
+		if ( empty( $title ) )
 			$title = $have_gettext ? __('WordPress &rsaquo; Error') : 'WordPress &rsaquo; Error';
 
 		$text_direction = 'ltr';
-		if ( isset($r['text_direction']) && 'rtl' == $r['text_direction'] )
+		if ( isset( $r['text_direction'] ) && 'rtl' == $r['text_direction'] )
 			$text_direction = 'rtl';
 		elseif ( function_exists( 'is_rtl' ) && is_rtl() )
 			$text_direction = 'rtl';
@@ -2480,7 +2480,7 @@ function _default_wp_die_handler( $message, $title = '', $args = array() ) {
 		}
 		ul li {
 			margin-bottom: 10px;
-			font-size: 14px ;
+			font-size: 14px;
 		}
 		a {
 			color: #21759B;
