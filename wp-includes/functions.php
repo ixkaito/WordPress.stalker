@@ -889,7 +889,7 @@ function get_status_header_desc( $code ) {
 
 	$code = absint( $code );
 
-	if ( !isset( $wp_header_to_desc ) ) {
+	if ( ! isset( $wp_header_to_desc ) ) {
 		$wp_header_to_desc = array(
 			100 => 'Continue',
 			101 => 'Switching Protocols',
@@ -954,8 +954,8 @@ function get_status_header_desc( $code ) {
 		);
 	}
 
-	if ( isset( $wp_header_to_desc[$code] ) )
-		return $wp_header_to_desc[$code];
+	if ( isset( $wp_header_to_desc[ $code ] ) )
+		return $wp_header_to_desc[ $code ];
 	else
 		return '';
 }
