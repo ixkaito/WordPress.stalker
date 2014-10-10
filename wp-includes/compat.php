@@ -13,11 +13,11 @@ if ( !function_exists('_') ) {
 	}
 }
 
-if ( !function_exists('mb_substr') ):
+if ( !function_exists('mb_substr') ) {
 	function mb_substr( $str, $start, $length=null, $encoding=null ) {
 		return _mb_substr($str, $start, $length, $encoding);
 	}
-endif;
+}
 
 function _mb_substr( $str, $start, $length=null, $encoding=null ) {
 	// the solution below, works only for utf-8, so in case of a different
@@ -32,11 +32,11 @@ function _mb_substr( $str, $start, $length=null, $encoding=null ) {
 	return implode( '', $chars );
 }
 
-if ( !function_exists('hash_hmac') ):
-function hash_hmac($algo, $data, $key, $raw_output = false) {
-	return _hash_hmac($algo, $data, $key, $raw_output);
+if ( !function_exists('hash_hmac') ) {
+	function hash_hmac($algo, $data, $key, $raw_output = false) {
+		return _hash_hmac($algo, $data, $key, $raw_output);
+	}
 }
-endif;
 
 function _hash_hmac($algo, $data, $key, $raw_output = false) {
 	$packs = array('md5' => 'H32', 'sha1' => 'H40');
@@ -95,31 +95,31 @@ if ( !function_exists('json_decode') ) {
 	}
 }
 
-if ( ! function_exists( 'hash_equals' ) ) :
-/**
- * Compare two strings in constant time.
- *
- * This function was added in PHP 5.6.
- * It can leak the length of a string.
- *
- * @since 3.9.2
- *
- * @param string $a Expected string.
- * @param string $b Actual string.
- * @return bool Whether strings are equal.
- */
-function hash_equals( $a, $b ) {
-	$a_length = strlen( $a );
-	if ( $a_length !== strlen( $b ) ) {
-		return false;
-	}
-	$result = 0;
+if ( ! function_exists( 'hash_equals' ) ) {
+	/**
+	 * Compare two strings in constant time.
+	 *
+	 * This function was added in PHP 5.6.
+	 * It can leak the length of a string.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param string $a Expected string.
+	 * @param string $b Actual string.
+	 * @return bool Whether strings are equal.
+	 */
+	function hash_equals( $a, $b ) {
+		$a_length = strlen( $a );
+		if ( $a_length !== strlen( $b ) ) {
+			return false;
+		}
+		$result = 0;
 
-	// Do not attempt to "optimize" this.
-	for ( $i = 0; $i < $a_length; $i++ ) {
-		$result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
-	}
+		// Do not attempt to "optimize" this.
+		for ( $i = 0; $i < $a_length; $i++ ) {
+			$result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
+		}
 
-	return $result === 0;
+		return $result === 0;
+	}
 }
-endif;
