@@ -137,7 +137,7 @@ define('EP_ATTACHMENT', 2);
 define('EP_DATE', 4);
 
 /**
- * Endpoint Mask for year
+ * Endpoint Mask for year.
  *
  * @since 2.1.0
  */
