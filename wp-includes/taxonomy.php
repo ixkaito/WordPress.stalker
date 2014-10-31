@@ -2365,7 +2365,7 @@ function wp_get_object_terms($object_ids, $taxonomies, $args = array()) {
  *
  * If the taxonomy is hierarchical, and the 'parent' argument is not empty,
  * the term is inserted and the term_id will be given.
-
+ *
  * Error handling:
  * If $taxonomy does not exist or $term is empty,
  * a WP_Error object will be returned.
@@ -2374,7 +2374,7 @@ function wp_get_object_terms($object_ids, $taxonomies, $args = array()) {
  * or the term slug and name are not unique, a WP_Error object will be returned.
  *
  * @global wpdb $wpdb The WordPress database object.
-
+ *
  * @since 2.3.0
  *
  * @param string       $term     The term to add or update.
