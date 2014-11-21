@@ -114,8 +114,8 @@ class WP_Locale {
 		$this->weekday_initial[__('Friday')]    = /* translators: one-letter abbreviation of the weekday */ __('F_Friday_initial');
 		$this->weekday_initial[__('Saturday')]  = /* translators: one-letter abbreviation of the weekday */ __('S_Saturday_initial');
 
-		foreach ( $this->weekday_initial as $weekday_ => $weekday_initial_ ) {
-			$this->weekday_initial[ $weekday_ ] = preg_replace( '/_.+_initial$/', '', $weekday_initial_ );
+		foreach ($this->weekday_initial as $weekday_ => $weekday_initial_) {
+			$this->weekday_initial[$weekday_] = preg_replace('/_.+_initial$/', '', $weekday_initial_);
 		}
 
 		// Abbreviations for each day.
@@ -143,21 +143,21 @@ class WP_Locale {
 
 		// Abbreviations for each month. Uses the same hack as above to get around the
 		// 'May' duplication.
-		$this->month_abbrev[__('January')]   = /* translators: three-letter abbreviation of the month */ __('Jan_January_abbreviation');
-		$this->month_abbrev[__('February')]  = /* translators: three-letter abbreviation of the month */ __('Feb_February_abbreviation');
-		$this->month_abbrev[__('March')]     = /* translators: three-letter abbreviation of the month */ __('Mar_March_abbreviation');
-		$this->month_abbrev[__('April')]     = /* translators: three-letter abbreviation of the month */ __('Apr_April_abbreviation');
-		$this->month_abbrev[__('May')]       = /* translators: three-letter abbreviation of the month */ __('May_May_abbreviation');
-		$this->month_abbrev[__('June')]      = /* translators: three-letter abbreviation of the month */ __('Jun_June_abbreviation');
-		$this->month_abbrev[__('July')]      = /* translators: three-letter abbreviation of the month */ __('Jul_July_abbreviation');
-		$this->month_abbrev[__('August')]    = /* translators: three-letter abbreviation of the month */ __('Aug_August_abbreviation');
+		$this->month_abbrev[__('January')] = /* translators: three-letter abbreviation of the month */ __('Jan_January_abbreviation');
+		$this->month_abbrev[__('February')] = /* translators: three-letter abbreviation of the month */ __('Feb_February_abbreviation');
+		$this->month_abbrev[__('March')] = /* translators: three-letter abbreviation of the month */ __('Mar_March_abbreviation');
+		$this->month_abbrev[__('April')] = /* translators: three-letter abbreviation of the month */ __('Apr_April_abbreviation');
+		$this->month_abbrev[__('May')] = /* translators: three-letter abbreviation of the month */ __('May_May_abbreviation');
+		$this->month_abbrev[__('June')] = /* translators: three-letter abbreviation of the month */ __('Jun_June_abbreviation');
+		$this->month_abbrev[__('July')] = /* translators: three-letter abbreviation of the month */ __('Jul_July_abbreviation');
+		$this->month_abbrev[__('August')] = /* translators: three-letter abbreviation of the month */ __('Aug_August_abbreviation');
 		$this->month_abbrev[__('September')] = /* translators: three-letter abbreviation of the month */ __('Sep_September_abbreviation');
-		$this->month_abbrev[__('October')]   = /* translators: three-letter abbreviation of the month */ __('Oct_October_abbreviation');
-		$this->month_abbrev[__('November')]  = /* translators: three-letter abbreviation of the month */ __('Nov_November_abbreviation');
-		$this->month_abbrev[__('December')]  = /* translators: three-letter abbreviation of the month */ __('Dec_December_abbreviation');
+		$this->month_abbrev[__('October')] = /* translators: three-letter abbreviation of the month */ __('Oct_October_abbreviation');
+		$this->month_abbrev[__('November')] = /* translators: three-letter abbreviation of the month */ __('Nov_November_abbreviation');
+		$this->month_abbrev[__('December')] = /* translators: three-letter abbreviation of the month */ __('Dec_December_abbreviation');
 
-		foreach ( $this->month_abbrev as $month_ => $month_abbrev_ ) {
-			$this->month_abbrev[ $month_ ] = preg_replace( '/_.+_abbreviation$/', '', $month_abbrev_ );
+		foreach ($this->month_abbrev as $month_ => $month_abbrev_) {
+			$this->month_abbrev[$month_] = preg_replace('/_.+_abbreviation$/', '', $month_abbrev_);
 		}
 
 		// The Meridiems
