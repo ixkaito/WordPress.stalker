@@ -1473,7 +1473,7 @@ function register_post_type( $post_type, $args = array() ) {
  * 'capabilities' argument is not supplied.
  *
  * The capability_type argument can optionally be registered as an array, with
- * the first value being singular and the second plural, e.g. array('story, 'stories')
+ * the first value being singular and the second plural, e.g. array('story', 'stories')
  * Otherwise, an 's' will be added to the value for the plural form. After
  * registration, capability_type will always be a string of the singular value.
  *
