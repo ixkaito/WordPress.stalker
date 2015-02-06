@@ -1503,7 +1503,7 @@ function register_post_type( $post_type, $args = array() ) {
  * - delete_private_posts - Controls whether private objects can be deleted.
  * - delete_published_posts - Controls whether published objects can be deleted.
  * - delete_others_posts - Controls whether objects owned by other users can be
- *   can be deleted. If the post type does not support an author, then this will
+ *   deleted. If the post type does not support an author, then this will
  *   behave like delete_posts.
  * - edit_private_posts - Controls whether private objects can be edited.
  * - edit_published_posts - Controls whether published objects can be edited.
