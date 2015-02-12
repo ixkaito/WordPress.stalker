@@ -367,7 +367,7 @@ function _nx($single, $plural, $number, $context, $domain = 'default') {
  * <code>
  * $messages = array(
  *  	'post' => _n_noop('%s post', '%s posts'),
- *  	'page' => _n_noop('%s pages', '%s pages')
+ *  	'page' => _n_noop('%s page', '%s pages')
  * );
  * ...
  * $message = $messages[$type];
