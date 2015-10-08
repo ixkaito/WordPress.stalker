@@ -789,7 +789,7 @@ function wp_parse_auth_cookie($cookie = '', $scheme = '') {
 					$cookie_name = AUTH_COOKIE;
 					$scheme = 'auth';
 				}
-	    }
+		}
 
 		if ( empty($_COOKIE[$cookie_name]) )
 			return false;
