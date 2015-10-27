@@ -1730,64 +1730,65 @@ function media_upload_form( $errors = null ) {
 
 ?></div>
 <?php
-if ( is_multisite() && !is_upload_space_available() ) {
+
+	if ( is_multisite() && !is_upload_space_available() ) {
+		/**
+		 * Fires when an upload will exceed the defined upload space quota for a network site.
+		 *
+		 * @since 3.5.0
+		 */
+		do_action( 'upload_ui_over_quota' );
+		return;
+	}
+
 	/**
-	 * Fires when an upload will exceed the defined upload space quota for a network site.
+	 * Fires just before the legacy (pre-3.5.0) upload interface is loaded.
 	 *
-	 * @since 3.5.0
+	 * @since 2.6.0
 	 */
-	do_action( 'upload_ui_over_quota' );
-	return;
-}
+	do_action( 'pre-upload-ui' );
 
-/**
- * Fires just before the legacy (pre-3.5.0) upload interface is loaded.
- *
- * @since 2.6.0
- */
-do_action( 'pre-upload-ui' );
+	$post_params = array(
+		"post_id" => $post_id,
+		"_wpnonce" => wp_create_nonce('media-form'),
+		"type" => $_type,
+		"tab" => $_tab,
+		"short" => "1",
+	);
 
-$post_params = array(
-	"post_id" => $post_id,
-	"_wpnonce" => wp_create_nonce('media-form'),
-	"type" => $_type,
-	"tab" => $_tab,
-	"short" => "1",
-);
+	/**
+	 * Filter the media upload post parameters.
+	 *
+	 * @since 3.1.0 As 'swfupload_post_params'
+	 * @since 3.3.0
+	 *
+	 * @param array $post_params An array of media upload parameters used by Plupload.
+	 */
+	$post_params = apply_filters( 'upload_post_params', $post_params );
 
-/**
- * Filter the media upload post parameters.
- *
- * @since 3.1.0 As 'swfupload_post_params'
- * @since 3.3.0
- *
- * @param array $post_params An array of media upload parameters used by Plupload.
- */
-$post_params = apply_filters( 'upload_post_params', $post_params );
+	$plupload_init = array(
+		'runtimes'            => 'html5,flash,silverlight,html4',
+		'browse_button'       => 'plupload-browse-button',
+		'container'           => 'plupload-upload-ui',
+		'drop_element'        => 'drag-drop-area',
+		'file_data_name'      => 'async-upload',
+		'url'                 => $upload_action_url,
+		'flash_swf_url'       => includes_url( 'js/plupload/plupload.flash.swf' ),
+		'silverlight_xap_url' => includes_url( 'js/plupload/plupload.silverlight.xap' ),
+		'filters' => array(
+			'max_file_size'   => $max_upload_size . 'b',
+		),
+		'multipart_params'    => $post_params,
+	);
 
-$plupload_init = array(
-	'runtimes'            => 'html5,flash,silverlight,html4',
-	'browse_button'       => 'plupload-browse-button',
-	'container'           => 'plupload-upload-ui',
-	'drop_element'        => 'drag-drop-area',
-	'file_data_name'      => 'async-upload',
-	'url'                 => $upload_action_url,
-	'flash_swf_url'       => includes_url( 'js/plupload/plupload.flash.swf' ),
-	'silverlight_xap_url' => includes_url( 'js/plupload/plupload.silverlight.xap' ),
-	'filters' => array(
-		'max_file_size'   => $max_upload_size . 'b',
-	),
-	'multipart_params'    => $post_params,
-);
-
-/**
- * Filter the default Plupload settings.
- *
- * @since 3.3.0
- *
- * @param array $plupload_init An array of default settings used by Plupload.
- */
-$plupload_init = apply_filters( 'plupload_init', $plupload_init );
+	/**
+	 * Filter the default Plupload settings.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param array $plupload_init An array of default settings used by Plupload.
+	 */
+	$plupload_init = apply_filters( 'plupload_init', $plupload_init );
 
 ?>
 
@@ -1807,13 +1808,14 @@ wpUploaderInit = <?php echo json_encode($plupload_init); ?>;
 
 <div id="plupload-upload-ui" class="hide-if-no-js">
 <?php
-/**
- * Fires before the upload interface loads.
- *
- * @since 2.6.0 As 'pre-flash-upload-ui'
- * @since 3.3.0
- */
-do_action( 'pre-plupload-upload-ui' ); ?>
+	/**
+	 * Fires before the upload interface loads.
+	 *
+	 * @since 2.6.0 As 'pre-flash-upload-ui'
+	 * @since 3.3.0
+	 */
+	do_action( 'pre-plupload-upload-ui' );
+?>
 <div id="drag-drop-area">
 	<div class="drag-drop-inside">
 	<p class="drag-drop-info"><?php _e('Drop files here'); ?></p>
@@ -1822,24 +1824,25 @@ do_action( 'pre-plupload-upload-ui' ); ?>
 	</div>
 </div>
 <?php
-/**
- * Fires after the upload interface loads.
- *
- * @since 2.6.0 As 'post-flash-upload-ui'
- * @since 3.3.0
- */
-do_action( 'post-plupload-upload-ui' ); ?>
+	/**
+	 * Fires after the upload interface loads.
+	 *
+	 * @since 2.6.0 As 'post-flash-upload-ui'
+	 * @since 3.3.0
+	 */
+	do_action( 'post-plupload-upload-ui' );
+?>
 </div>
 
 <div id="html-upload-ui" class="hide-if-js">
-	<?php
+<?php
 	/**
 	 * Fires before the upload button in the media upload interface.
 	 *
 	 * @since 2.6.0
 	 */
 	do_action( 'pre-html-upload-ui' );
-	?>
+?>
 	<p id="async-upload-wrap">
 		<label class="screen-reader-text" for="async-upload"><?php _e('Upload'); ?></label>
 		<input type="file" name="async-upload" id="async-upload" />
@@ -1848,12 +1851,12 @@ do_action( 'post-plupload-upload-ui' ); ?>
 	</p>
 	<div class="clear"></div>
 <?php
-/**
- * Fires after the upload button in the media upload interface.
- *
- * @since 2.6.0
- */
-do_action( 'post-html-upload-ui' );
+	/**
+	 * Fires after the upload button in the media upload interface.
+	 *
+	 * @since 2.6.0
+	 */
+	do_action( 'post-html-upload-ui' );
 ?>
 </div>
 
