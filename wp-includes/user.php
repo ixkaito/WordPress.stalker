@@ -1615,9 +1615,9 @@ function validate_username( $username ) {
  *     @type string      $user_url        The user URL.
  *     @type string      $user_email      The user email address.
  *     @type string      $display_name    The user's display name.
- *                                        Default is the the user's username.
- *     @type string      $nickname        The user's nickname. Default
- *                                        Default is the the user's username.
+ *                                        Default is the user's username.
+ *     @type string      $nickname        The user's nickname.
+ *                                        Default is the user's username.
  *     @type string      $first_name      The user's first name. For new users, will be used
  *                                        to build $display_name if unspecified.
  *     @type stirng      $last_name       The user's last name. For new users, will be used
