@@ -37,7 +37,7 @@ function get_the_ID() {
  *
  * @param string $before Optional. Content to prepend to the title.
  * @param string $after Optional. Content to append to the title.
- * @param bool $echo Optional, default to true.Whether to display or return.
+ * @param bool $echo Optional, default to true. Whether to display or return.
  * @return null|string Null on no title. String if $echo parameter is false.
  */
 function the_title($before = '', $after = '', $echo = true) {
